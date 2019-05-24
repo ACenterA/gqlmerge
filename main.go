@@ -18,6 +18,7 @@ func main() {
 
 	// TODO : needs to improve to work with a relative path.
 
+	fmt.Printf("👍 Intnerface mode\n")
 	ss := gql.Merge(cmd.Paths...)
 
 	if ss != nil {
