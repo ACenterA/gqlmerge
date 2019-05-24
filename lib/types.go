@@ -13,6 +13,7 @@ type Schema struct {
 	Scalars       []*Scalar
 	Enums         []*Enum
 	Interfaces    []*Interface
+	InterfacesMap map[string]*Interface
 	Unions        []*Union
 	Inputs        []*Input
 }

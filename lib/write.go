@@ -2,6 +2,7 @@ package lib
 
 import (
 	"strings"
+	"fmt"
 )
 
 type MergedSchema struct {
@@ -214,6 +215,30 @@ func (ms *MergedSchema) StitchSchema(s *Schema) string {
 			ms.WriteString(" implements " + *t.ImplType)
 		}
 		ms.WriteString(" {\n")
+                // var propsMethods := make(map[string]Prop{},0)
+		propsMethods := map[string]*Prop{}
+
+		if (t.Impl) {
+			for _, p := range t.Props {
+				propsMethods[p.Name] = p
+			}
+			if (t.Impl == true) {
+			implObj := s.InterfacesMap[*t.ImplType]
+			if (implObj == nil) {
+				fmt.Printf("😱 WARNING: Interface '%s' not found\n", *t.ImplType)
+			} else {
+				for _, p := range implObj.Props {
+					if _, ok := propsMethods[p.Name]; ok {
+						// It exists, already do not override the values ...
+						// TODO: Check if same Type? otherwise send warning?
+					} else {
+						// It did nott exists lets add them
+						t.Props = append(t.Props, p)
+					}
+				}
+			}
+			}
+		}
 		for _, p := range t.Props {
 			ms.addIndent(2)
 			ms.WriteString(p.Name)

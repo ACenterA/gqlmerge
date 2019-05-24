@@ -391,7 +391,6 @@ func (s *Schema) ParseSchema(l *Lexer) {
 
 					t.Props = append(t.Props, &p)
 				}
-
 				s.TypeNames = append(s.TypeNames, &t)
 				l.ConsumeToken('}')
 			}
@@ -487,6 +486,13 @@ func (s *Schema) UniqueInterface(wg *sync.WaitGroup) {
 		j++
 	}
 	s.Interfaces = s.Interfaces[:j]
+
+	if (s.InterfacesMap == nil) {
+		s.InterfacesMap = make(map[string]*Interface,0)
+	}
+	for _, v := range s.Interfaces {
+		s.InterfacesMap[v.Name] = v
+	}
 }
 
 func (s *Schema) UniqueUnion(wg *sync.WaitGroup) {
