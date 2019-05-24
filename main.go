@@ -6,7 +6,8 @@ import (
 	"os"
 
 	"github.com/mattdamon108/gqlmerge/command"
-	gql "github.com/mattdamon108/gqlmerge/lib"
+	gql "github.com/ACenterA/gqlmerge/lib"
+	// gql "github.com/mattdamon108/gqlmerge/lib"
 )
 
 func main() {
@@ -18,7 +19,6 @@ func main() {
 
 	// TODO : needs to improve to work with a relative path.
 
-	fmt.Printf("👍 Intnerface mode\n")
 	ss := gql.Merge(cmd.Paths...)
 
 	if ss != nil {
