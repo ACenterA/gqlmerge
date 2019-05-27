@@ -1,0 +1,10 @@
+{{ with .NativeTypeNames }}
+  {{ range . }}
+    {{ .Name }}:
+      {{ with .Props }}
+        {{ range . }}
+           {{ .Name }}: {{ .Type }}
+        {{ end }}
+      {{ end }}
+  {{ end }} 
+{{ end }}

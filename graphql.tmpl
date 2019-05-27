@@ -1,0 +1,32 @@
+{{ with .Queries }}
+  {{ range . }}
+    AppSyncModel{{ .Name | Title }}Queries
+        Type: AWS::AppSync::Resolver
+        Properties:
+        ApiId:
+          Fn::GetAtt: 'GraphApi.ApiId'
+        TypeName: Mutation
+        FieldName: createPost
+        DataSourceName:
+          Fn::GetAtt: "AppSyncModelDataSource.Name"
+        RequestMappingTemplate: '{ "version" : "2017-02-28", "operation": "Invoke", "payload": { "resolve": "query.{{ .Name }}", "context": $utils.toJson($context) } }'
+        ResponseMappingTemplate: '$util.toJson($context.result)'
+  {{ end }} 
+{{ end }}
+
+
+{{ with .Mutations }}
+  {{ range . }}
+    AppSyncModel{{ .Name | Title }}Mutations
+        Type: AWS::AppSync::Resolver
+        Properties:
+        ApiId:
+          Fn::GetAtt: 'GraphApi.ApiId'
+        TypeName: Mutation
+        FieldName: createPost
+        DataSourceName:
+          Fn::GetAtt: "AppSyncModelDataSource.Name"
+        RequestMappingTemplate: '{ "version" : "2017-02-28", "operation": "Invoke", "payload": { "resolve": "mutation.{{ .Name }}", "context": $utils.toJson($context) } }'
+        ResponseMappingTemplate: '$util.toJson($context.result)'
+  {{ end }} 
+{{ end }}
