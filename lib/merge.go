@@ -23,6 +23,8 @@ func Merge(paths ...string) *string {
 	schema := joinSchemas(schemas)
 	ms := MergedSchema{}
 	ss := ms.StitchSchema(schema)
+	ms.GenerateTemplate(schema)
+
 	return &ss
 }
 

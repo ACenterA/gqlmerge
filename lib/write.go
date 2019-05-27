@@ -3,6 +3,10 @@ package lib
 import (
 	"strings"
 	"fmt"
+	"os"
+	"io/ioutil"
+	"text/template"
+	"bytes"
 )
 
 type MergedSchema struct {
@@ -47,6 +51,37 @@ func (ms *MergedSchema) stitchArgument(a *Arg, l int, i int) {
 	}
 	if l > 2 && i != l-1 {
 		ms.WriteString("\n")
+	}
+}
+
+
+func (ms *MergedSchema) GenerateTemplate(s *Schema) {
+	paths := []string{
+		"graphql.tmpl",
+	}
+
+	funcMap := template.FuncMap{
+		"ToUpper": strings.ToUpper,
+		"Title": strings.Title,
+	}
+
+	if _, err := os.Stat("graphql.tmpl"); os.IsNotExist(err) {
+		// path/to/whatever does not exist
+	} else {
+
+		t := template.Must(template.New("graphql.tmpl").Funcs(funcMap).ParseFiles(paths...))
+		
+		var tpl bytes.Buffer
+		err := t.Execute(&tpl, s)
+		if err != nil {
+			panic(err)
+		}
+		
+		bs := tpl.Bytes()
+		err = ioutil.WriteFile("graphql.sam", bs, 0644)
+		if err != nil {
+			panic(err)
+		}
 	}
 }
 
