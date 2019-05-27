@@ -85,6 +85,37 @@ func (ms *MergedSchema) GenerateTemplate(s *Schema) {
 	}
 }
 
+func (ms *MergedSchema) GenerateNativeTemplate(s *Schema) {
+	paths := []string{
+		"models.tmpl",
+	}
+
+	funcMap := template.FuncMap{
+		"ToUpper": strings.ToUpper,
+		"Title": strings.Title,
+	}
+
+	if _, err := os.Stat("models.tmpl"); os.IsNotExist(err) {
+		// path/to/whatever does not exist
+	} else {
+
+		t := template.Must(template.New("models.tmpl").Funcs(funcMap).ParseFiles(paths...))
+		
+		var tpl bytes.Buffer
+		err := t.Execute(&tpl, s)
+		if err != nil {
+			panic(err)
+		}
+		
+		bs := tpl.Bytes()
+		err = ioutil.WriteFile("models.sam", bs, 0644)
+		if err != nil {
+			panic(err)
+		}
+	}
+}
+
+
 func (ms *MergedSchema) StitchSchema(s *Schema) string {
 	numOfQurs := len(s.Queries)
 	numOfMuts := len(s.Mutations)

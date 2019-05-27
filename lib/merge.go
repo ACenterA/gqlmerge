@@ -24,6 +24,7 @@ func Merge(paths ...string) *string {
 	ms := MergedSchema{}
 	ss := ms.StitchSchema(schema)
 	ms.GenerateTemplate(schema)
+	ms.GenerateNativeTemplate(schema)
 
 	return &ss
 }
@@ -60,6 +61,7 @@ func joinSchemas(schemas []Schema) *Schema {
 		schema.Queries = append(schema.Queries, s.Queries...)
 		schema.Subscriptions = append(schema.Subscriptions, s.Subscriptions...)
 		schema.TypeNames = append(schema.TypeNames, s.TypeNames...)
+		schema.NativeTypeNames = append(schema.NativeTypeNames, s.NativeTypeNames...)
 		schema.Scalars = append(schema.Scalars, s.Scalars...)
 		schema.Enums = append(schema.Enums, s.Enums...)
 		schema.Interfaces = append(schema.Interfaces, s.Interfaces...)
@@ -68,11 +70,12 @@ func joinSchemas(schemas []Schema) *Schema {
 	}
 
 	wg := sync.WaitGroup{}
-	wg.Add(8)
+	wg.Add(9)
 
 	go schema.UniqueMutation(&wg)
 	go schema.UniqueQuery(&wg)
 	go schema.UniqueTypeName(&wg)
+	go schema.UniqueNativeTypeName(&wg)
 	go schema.UniqueScalar(&wg)
 	go schema.UniqueEnum(&wg)
 	go schema.UniqueInterface(&wg)

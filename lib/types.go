@@ -10,6 +10,7 @@ type Schema struct {
 	Queries       []*Query
 	Subscriptions []*Subscription
 	TypeNames     []*TypeName
+	NativeTypeNames     []*TypeName
 	Scalars       []*Scalar
 	Enums         []*Enum
 	Interfaces    []*Interface

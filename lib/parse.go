@@ -2,6 +2,7 @@ package lib
 
 import (
 	"sync"
+	"fmt"
 	"text/scanner"
 )
 
@@ -164,8 +165,33 @@ func (s *Schema) ParseSchema(l *Lexer) {
 			s.Inputs = append(s.Inputs, &i)
 			l.ConsumeToken('}')
 
+		case "nativetype":
+			t := TypeName{}
+
+			
+			// handling in case of type has implements
+			if l.Peek() == scanner.Ident {
+				x = l.ConsumeIdent()
+			}
+			t.Name = x
+
+			l.ConsumeToken('{')
+
+			for l.Peek() != '}' {
+				p := Prop{}
+				p.Name = l.ConsumeIdent()
+				p.IsList = false
+				p.IsListNull = false
+				l.ConsumeToken(':')
+				p.Type = l.ConsumeLiteral()
+				t.Props = append(t.Props, &p)
+			}
+			s.NativeTypeNames = append(s.NativeTypeNames, &t)
+			l.ConsumeToken('}')
+
 		case "type":
 
+			
 			switch x := l.ConsumeIdent(); x {
 
 			case "Query":
@@ -441,6 +467,21 @@ func (s *Schema) UniqueTypeName(wg *sync.WaitGroup) {
 		j++
 	}
 	s.TypeNames = s.TypeNames[:j]
+}
+func (s *Schema) UniqueNativeTypeName(wg *sync.WaitGroup) {
+	defer wg.Done()
+	j := 0
+	seen := make(map[string]struct{}, len(s.NativeTypeNames))
+	for _, v := range s.NativeTypeNames {
+		if _, ok := seen[v.Name]; ok {
+			fmt.Println("WARNING: ", v.Name, " is definend more than once! Unexpected behaviors")
+			continue
+		}
+		seen[v.Name] = struct{}{}
+		s.NativeTypeNames[j] = v
+		j++
+	}
+	s.NativeTypeNames = s.NativeTypeNames[:j]
 }
 
 func (s *Schema) UniqueScalar(wg *sync.WaitGroup) {

@@ -73,6 +73,19 @@ func (l *Lexer) ConsumeIdent() string {
 	return name
 }
 
+func (l *Lexer) ConsumeLiteral() string {
+	name := l.sc.TokenText()
+	for {
+		next := l.sc.Next()
+		if next == '\r' || next == '\n' || next == scanner.EOF {
+			break
+		}
+		l.buffer.WriteRune(next)
+	}
+	l.ConsumeWhitespace()
+	return name
+}
+
 func (l *Lexer) ConsumeToken(expected rune) {
 	if l.next != expected {
 		msg := fmt.Sprintf(

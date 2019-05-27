@@ -1,2 +1,6 @@
+github.com/graph-gophers/graphql-go v0.0.0-20190513003547-158e7b876106 h1:L71b0f1w8emxtpS1magaE0SzE4vhXCH4VzSkkNsBNDQ=
+github.com/graph-gophers/graphql-go v0.0.0-20190513003547-158e7b876106/go.mod h1:uJhtPXrcJLqyi0H5IuMFh+fgW+8cMMakK3Txrbk/WJE=
 github.com/mattdamon108/gqlmerge v0.2.1 h1:84h4eEz8bSwzSzV46pqjPJu7E/ASMCKJP1lhHh67E2Q=
 github.com/mattdamon108/gqlmerge v0.2.1/go.mod h1:3NLS31e+dg0LnCB5wADS0jYqWatqRg5mBuqzd350sQc=
+github.com/opentracing/opentracing-go v1.0.2/go.mod h1:UkNAQd3GIcIGf0SeVgPpRdFStlNbqXla1AfSYxPUl2o=
+golang.org/x/net v0.0.0-20181220203305-927f97764cc3/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
