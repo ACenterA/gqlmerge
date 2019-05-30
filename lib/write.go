@@ -308,6 +308,7 @@ func (ms *MergedSchema) StitchSchema(s *Schema) string {
 						} else {
 							// It did nott exists lets add them
 							t.Props = append(t.Props, p)
+							propsMethods[p.Name] = p
 						}
 					}
 				}
