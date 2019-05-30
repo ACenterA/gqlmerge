@@ -363,7 +363,13 @@ func (s *Schema) ParseSchema(l *Lexer) {
 					l.ConsumeIdent()
 					t.Impl = true
 					x := l.ConsumeIdent()
-					t.ImplType = &x
+					t.ImplType = make([]*string,0)
+					t.ImplType = append(t.ImplType, &x)
+					for l.Peek() == '&' {
+						l.ConsumeToken('&')
+						xType := l.ConsumeIdent()
+						t.ImplType = append(t.ImplType, &xType)
+					}
 				} else {
 					t.Impl = false
 				}

@@ -43,7 +43,7 @@ type Subscription struct {
 type TypeName struct {
 	Name     string
 	Impl     bool
-	ImplType *string
+	ImplType []*string
 	Props    []*Prop
 }
 

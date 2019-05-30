@@ -278,7 +278,13 @@ func (ms *MergedSchema) StitchSchema(s *Schema) string {
 		ms.WriteString("type ")
 		ms.WriteString(t.Name)
 		if t.Impl {
-			ms.WriteString(" implements " + *t.ImplType)
+			ms.WriteString(" implements " )
+			for r := range t.ImplType {
+				if (r != 0) {
+					ms.WriteString(" & ")
+				}
+				ms.WriteString(*t.ImplType[r])
+			}
 		}
 		ms.WriteString(" {\n")
                 // var propsMethods := make(map[string]Prop{},0)
@@ -289,17 +295,20 @@ func (ms *MergedSchema) StitchSchema(s *Schema) string {
 				propsMethods[p.Name] = p
 			}
 			if (t.Impl == true) {
-			implObj := s.InterfacesMap[*t.ImplType]
-			if (implObj == nil) {
-				fmt.Printf("😱 WARNING: Interface '%s' not found\n", *t.ImplType)
-			} else {
-				for _, p := range implObj.Props {
-					if _, ok := propsMethods[p.Name]; ok {
-						// It exists, already do not override the values ...
-						// TODO: Check if same Type? otherwise send warning?
-					} else {
-						// It did nott exists lets add them
-						t.Props = append(t.Props, p)
+			for r := range t.ImplType {
+				implTypeObj := *t.ImplType[r]
+				implObj := s.InterfacesMap[implTypeObj]
+				if (implObj == nil) {
+					fmt.Printf("😱 WARNING: Interface '%s' not found\n", implObj)
+				} else {
+					for _, p := range implObj.Props {
+						if _, ok := propsMethods[p.Name]; ok {
+							// It exists, already do not override the values ...
+							// TODO: Check if same Type? otherwise send warning?
+						} else {
+							// It did nott exists lets add them
+							t.Props = append(t.Props, p)
+						}
 					}
 				}
 			}
