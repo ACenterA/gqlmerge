@@ -42,6 +42,20 @@ func (l *Lexer) ConsumeWhitespace() {
 	}
 }
 
+func (l *Lexer) ConsumeWhitespaceNoComma() {
+	l.buffer.Reset()
+	for {
+		l.next = l.sc.Scan()
+
+		if l.next == '#' {
+			l.ConsumeComment()
+			continue
+		}
+
+		break
+	}
+}
+
 func (l *Lexer) ConsumeComment() {
 	for {
 		next := l.sc.Next()
@@ -77,12 +91,17 @@ func (l *Lexer) ConsumeLiteral() string {
 	name := l.sc.TokenText()
 	for {
 		next := l.sc.Next()
+		if (next == ',') {
+			l.sc.Scan()
+			name = name + "," + l.sc.TokenText()
+			continue
+		}
 		if next == '\r' || next == '\n' || next == scanner.EOF {
 			break
 		}
 		l.buffer.WriteRune(next)
 	}
-	l.ConsumeWhitespace()
+	l.ConsumeWhitespaceNoComma()
 	return name
 }
 
