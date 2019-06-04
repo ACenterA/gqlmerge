@@ -68,8 +68,10 @@ type Prop struct {
 	Args       []*Arg // in case of having args e.g. city(page: Pagination): String
 	Type       string
 	Null       bool
+	IsMap      bool
 	IsList     bool
 	IsListNull bool
+	Map        map[string]*Prop // in case of map
 	Directive  *Directive
 }
 

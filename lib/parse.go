@@ -183,7 +183,39 @@ func (s *Schema) ParseSchema(l *Lexer) {
 				p.IsList = false
 				p.IsListNull = false
 				l.ConsumeToken(':')
-				p.Type = l.ConsumeLiteral()
+				if l.Peek() == '{' {
+					// ?? l.ConsumeWhitespace()
+					l.ConsumeToken('{')
+					p.IsMap = true
+					p.Map = make(map[string]*Prop, 0)
+					for l.Peek() != '}' {
+						pInner := Prop{}
+						pInner.Name = l.ConsumeIdent()
+						l.ConsumeToken(':')
+
+						if l.Peek() == '{' {  // oh no another nested map ?
+							l.ConsumeToken('{')
+							pInner.IsMap = true
+							pInner.Map = make(map[string]*Prop, 0)
+							for l.Peek() != '}' {
+								pInnerNest := Prop{}
+								pInnerNest.Name = l.ConsumeIdent()
+								l.ConsumeToken(':')
+								pInnerNest.Type = l.ConsumeLiteral()
+								pInner.Map[pInnerNest.Name] = &pInnerNest
+							}
+							l.ConsumeToken('}')
+						} else {
+							pInner.Type = l.ConsumeLiteral()
+						}
+						// TODO: If is map.. set it
+						p.Map[pInner.Name] = &pInner
+					}
+					l.ConsumeToken('}')
+				} else {
+					p.Type = l.ConsumeLiteral()
+				}
+				// p.Type = l.ConsumeLiteral()
 				t.Props = append(t.Props, &p)
 			}
 			s.NativeTypeNames = append(s.NativeTypeNames, &t)
